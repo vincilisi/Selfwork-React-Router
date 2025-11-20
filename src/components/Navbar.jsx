@@ -6,59 +6,48 @@ function Navbar() {
     const { user, logout, isAuthenticated } = useAuth()
     const [ref, scrollY] = useScroll()
 
-    // Nascondi navbar quando si scrolla giù (dopo 100px)
-    const navbarClass = scrollY > 100
-        ? 'navbar navbar-hidden'
-        : 'navbar'
-
     return (
-        <nav className={navbarClass}>
-            <div className="navbar-container">
-                <Link to="/" className="navbar-logo">
+        <div className={`navbar glass sticky top-0 z-50 transition-transform duration-300 ${scrollY > 100 ? '-translate-y-full' : 'translate-y-0'}`}>
+            <div className="navbar-start">
+                <Link to="/" className="btn btn-ghost text-xl text-white font-bold hover:scale-105">
                     React Router App
                 </Link>
-                <ul className="nav-menu">
-                    <li className="nav-item">
-                        <Link to="/" className="nav-link">Home</Link>
-                    </li>
+            </div>
 
-                    {/* Mostra il link Posts solo se l'utente è autenticato */}
+            <div className="navbar-center hidden lg:flex">
+                <ul className="menu menu-horizontal px-1 text-white">
+                    <li><Link to="/" className="hover:bg-white/20">Home</Link></li>
+
                     {isAuthenticated() && (
-                        <li className="nav-item">
-                            <Link to="/posts" className="nav-link">Posts</Link>
-                        </li>
+                        <li><Link to="/posts" className="hover:bg-white/20">Posts</Link></li>
                     )}
 
-                    <li className="nav-item">
-                        <Link to="/components" className="nav-link">Components</Link>
-                    </li>
-
-                    {/* Mostra Login/Register solo se NON autenticato */}
-                    {!isAuthenticated() ? (
-                        <>
-                            <li className="nav-item">
-                                <Link to="/login" className="nav-link">Login</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/register" className="nav-link">Register</Link>
-                            </li>
-                        </>
-                    ) : (
-                        // Mostra info utente e logout se autenticato
-                        <>
-                            <li className="nav-item user-info">
-                                <span className="nav-link">👤 {user.name}</span>
-                            </li>
-                            <li className="nav-item">
-                                <button onClick={logout} className="nav-link logout-btn">
-                                    Logout
-                                </button>
-                            </li>
-                        </>
-                    )}
+                    <li><Link to="/components" className="hover:bg-white/20">Components</Link></li>
                 </ul>
             </div>
-        </nav>
+
+            <div className="navbar-end gap-2">
+                {!isAuthenticated() ? (
+                    <>
+                        <Link to="/login" className="btn btn-sm btn-ghost text-white hover:bg-white/20">
+                            Login
+                        </Link>
+                        <Link to="/register" className="btn btn-sm btn-primary">
+                            Register
+                        </Link>
+                    </>
+                ) : (
+                    <>
+                        <div className="badge badge-lg glass text-white">
+                            👤 {user.name}
+                        </div>
+                        <button onClick={logout} className="btn btn-sm btn-error btn-outline text-white hover:bg-error">
+                            Logout
+                        </button>
+                    </>
+                )}
+            </div>
+        </div>
     )
 }
 

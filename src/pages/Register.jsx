@@ -20,7 +20,7 @@ function Register() {
             ...prev,
             [name]: value
         }))
-        setError('') // Rimuovi l'errore quando l'utente modifica i campi
+        setError('')
     }
 
     const handleSubmit = (e) => {
@@ -46,7 +46,6 @@ function Register() {
 
             setSuccess(true)
 
-            // Reindirizza alla home dopo 1.5 secondi
             setTimeout(() => {
                 navigate('/')
             }, 1500)
@@ -56,75 +55,93 @@ function Register() {
     }
 
     return (
-        <div className="auth-page">
-            <div className="auth-container">
-                <h1>📝 Registrazione</h1>
-                <p className="auth-subtitle">Crea un nuovo account</p>
+        <div className="flex justify-center items-center min-h-[calc(100vh-80px)] px-4 py-8">
+            <div className="card w-full max-w-md glass">
+                <div className="card-body">
+                    <h1 className="text-3xl font-bold text-center text-white mb-2">📝 Registrazione</h1>
+                    <p className="text-center text-white/70 mb-6">Crea un nuovo account</p>
 
-                {error && <div className="error-message">{error}</div>}
-                {success && <div className="success-message">✅ Registrazione completata! Reindirizzamento...</div>}
+                    {error && (
+                        <div className="alert alert-error">
+                            <span>{error}</span>
+                        </div>
+                    )}
+                    {success && (
+                        <div className="alert alert-success">
+                            <span>✅ Registrazione completata! Reindirizzamento...</span>
+                        </div>
+                    )}
 
-                <form onSubmit={handleSubmit} className="auth-form">
-                    <div className="form-group">
-                        <label htmlFor="name">Nome completo</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            value={formData.name}
-                            onChange={handleChange}
-                            placeholder="Mario Rossi"
-                            required
-                        />
-                    </div>
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text text-white font-medium">Nome completo</span>
+                            </label>
+                            <input
+                                type="text"
+                                name="name"
+                                value={formData.name}
+                                onChange={handleChange}
+                                placeholder="Mario Rossi"
+                                className="input input-bordered glass text-white placeholder:text-white/50"
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="email">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            placeholder="tua@email.com"
-                            required
-                        />
-                    </div>
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text text-white font-medium">Email</span>
+                            </label>
+                            <input
+                                type="email"
+                                name="email"
+                                value={formData.email}
+                                onChange={handleChange}
+                                placeholder="tua@email.com"
+                                className="input input-bordered glass text-white placeholder:text-white/50"
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            placeholder="••••••••"
-                            required
-                        />
-                    </div>
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text text-white font-medium">Password</span>
+                            </label>
+                            <input
+                                type="password"
+                                name="password"
+                                value={formData.password}
+                                onChange={handleChange}
+                                placeholder="••••••••"
+                                className="input input-bordered glass text-white placeholder:text-white/50"
+                                required
+                            />
+                        </div>
 
-                    <div className="form-group">
-                        <label htmlFor="confirmPassword">Conferma Password</label>
-                        <input
-                            type="password"
-                            id="confirmPassword"
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleChange}
-                            placeholder="••••••••"
-                            required
-                        />
-                    </div>
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text text-white font-medium">Conferma Password</span>
+                            </label>
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                                placeholder="••••••••"
+                                className="input input-bordered glass text-white placeholder:text-white/50"
+                                required
+                            />
+                        </div>
 
-                    <button type="submit" className="auth-button">
-                        Registrati
-                    </button>
-                </form>
+                        <button type="submit" className="btn btn-primary w-full mt-4">
+                            Registrati
+                        </button>
+                    </form>
 
-                <p className="auth-link">
-                    Hai già un account? <Link to="/login">Accedi qui</Link>
-                </p>
+                    <p className="text-center text-white/70 mt-4">
+                        Hai già un account? <Link to="/login" className="text-white font-bold underline">Accedi qui</Link>
+                    </p>
+                </div>
             </div>
         </div>
     )
