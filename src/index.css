@@ -70,11 +70,32 @@ body {
   padding: 0.5rem 1rem;
   border-radius: 8px;
   transition: all 0.3s ease;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  font-family: inherit;
 }
 
 .nav-link:hover {
   background: rgba(255, 255, 255, 0.2);
   color: white;
+}
+
+/* User info in navbar */
+.user-info .nav-link {
+  background: rgba(255, 255, 255, 0.15);
+  cursor: default;
+}
+
+.logout-btn {
+  background: rgba(255, 107, 107, 0.3);
+  border: 1px solid rgba(255, 107, 107, 0.5);
+}
+
+.logout-btn:hover {
+  background: rgba(255, 107, 107, 0.5);
+  border-color: rgba(255, 107, 107, 0.7);
 }
 
 /* Home Page */
@@ -406,11 +427,24 @@ body {
 
 .error-message {
   text-align: center;
-  padding: 2rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
   color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.1);
+  background: rgba(255, 107, 107, 0.15);
   border-radius: 8px;
-  border: 1px solid rgba(255, 107, 107, 0.3);
+  border: 1px solid rgba(255, 107, 107, 0.4);
+  font-weight: 500;
+}
+
+.success-message {
+  text-align: center;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  color: #51cf66;
+  background: rgba(81, 207, 102, 0.15);
+  border-radius: 8px;
+  border: 1px solid rgba(81, 207, 102, 0.4);
+  font-weight: 500;
 }
 
 /* Responsive */

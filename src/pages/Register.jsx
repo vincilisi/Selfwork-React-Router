@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Register() {
     const [formData, setFormData] = useState({
@@ -8,6 +9,10 @@ function Register() {
         password: '',
         confirmPassword: ''
     })
+    const [error, setError] = useState('')
+    const [success, setSuccess] = useState(false)
+    const { register } = useAuth()
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -15,18 +20,39 @@ function Register() {
             ...prev,
             [name]: value
         }))
+        setError('') // Rimuovi l'errore quando l'utente modifica i campi
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        setError('')
 
         if (formData.password !== formData.confirmPassword) {
-            alert('Le password non coincidono!')
+            setError('Le password non coincidono!')
             return
         }
 
-        console.log('Register data:', formData)
-        // Qui andrà la logica di registrazione
+        if (formData.password.length < 6) {
+            setError('La password deve essere di almeno 6 caratteri')
+            return
+        }
+
+        try {
+            register({
+                name: formData.name,
+                email: formData.email,
+                password: formData.password
+            })
+
+            setSuccess(true)
+
+            // Reindirizza alla home dopo 1.5 secondi
+            setTimeout(() => {
+                navigate('/')
+            }, 1500)
+        } catch (err) {
+            setError(err.message)
+        }
     }
 
     return (
@@ -34,6 +60,9 @@ function Register() {
             <div className="auth-container">
                 <h1>📝 Registrazione</h1>
                 <p className="auth-subtitle">Crea un nuovo account</p>
+
+                {error && <div className="error-message">{error}</div>}
+                {success && <div className="success-message">✅ Registrazione completata! Reindirizzamento...</div>}
 
                 <form onSubmit={handleSubmit} className="auth-form">
                     <div className="form-group">

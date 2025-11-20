@@ -1,11 +1,15 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Login() {
     const [formData, setFormData] = useState({
         email: '',
         password: ''
     })
+    const [error, setError] = useState('')
+    const { login } = useAuth()
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         const { name, value } = e.target
@@ -13,12 +17,20 @@ function Login() {
             ...prev,
             [name]: value
         }))
+        setError('') // Rimuovi l'errore quando l'utente modifica i campi
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log('Login data:', formData)
-        // Qui andrà la logica di login
+        setError('')
+
+        try {
+            login(formData.email, formData.password)
+            // Reindirizza alla home dopo il login
+            navigate('/')
+        } catch (err) {
+            setError(err.message)
+        }
     }
 
     return (
@@ -26,6 +38,8 @@ function Login() {
             <div className="auth-container">
                 <h1>🔐 Login</h1>
                 <p className="auth-subtitle">Accedi al tuo account</p>
+
+                {error && <div className="error-message">{error}</div>}
 
                 <form onSubmit={handleSubmit} className="auth-form">
                     <div className="form-group">
