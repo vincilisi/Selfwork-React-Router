@@ -1,7 +1,16 @@
-import { useLoaderData, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import useFetch from '../hooks/useFetch'
 
 function Posts() {
-    const { posts } = useLoaderData()
+    const posts = useFetch('https://jsonplaceholder.typicode.com/posts')
+
+    if (!posts) {
+        return (
+            <div className="posts-page">
+                <div className="loading-spinner">⏳ Caricamento posts...</div>
+            </div>
+        )
+    }
 
     return (
         <div className="posts-page">

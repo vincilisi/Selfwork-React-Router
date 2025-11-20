@@ -1,11 +1,18 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import useScroll from '../hooks/useScroll'
 
 function Navbar() {
     const { user, logout, isAuthenticated } = useAuth()
+    const [ref, scrollY] = useScroll()
+
+    // Nascondi navbar quando si scrolla giù (dopo 100px)
+    const navbarClass = scrollY > 100
+        ? 'navbar navbar-hidden'
+        : 'navbar'
 
     return (
-        <nav className="navbar">
+        <nav className={navbarClass}>
             <div className="navbar-container">
                 <Link to="/" className="navbar-logo">
                     React Router App
