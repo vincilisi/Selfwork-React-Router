@@ -1,47 +1,36 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useForm } from 'react-hook-form'
 
 function Register() {
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    })
     const [error, setError] = useState('')
     const [success, setSuccess] = useState(false)
-    const { register } = useAuth()
+    const { register: registerUser } = useAuth()
     const navigate = useNavigate()
 
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }))
+    const {
+        register,
+        handleSubmit,
+        watch,
+        formState: { errors }
+    } = useForm()
+
+    const password = watch('password')
+
+    const onSubmit = (data) => {
         setError('')
-    }
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
-        setError('')
-
-        if (formData.password !== formData.confirmPassword) {
-            setError('Le password non coincidono!')
-            return
-        }
-
-        if (formData.password.length < 6) {
+        if (data.password.length < 6) {
             setError('La password deve essere di almeno 6 caratteri')
             return
         }
 
         try {
-            register({
-                name: formData.name,
-                email: formData.email,
-                password: formData.password
+            registerUser({
+                name: data.name,
+                email: data.email,
+                password: data.password
             })
 
             setSuccess(true)
@@ -72,20 +61,26 @@ function Register() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text text-white font-medium">Nome completo</span>
                             </label>
                             <input
                                 type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
+                                {...register('name', {
+                                    required: 'Nome è obbligatorio',
+                                    maxLength: {
+                                        value: 50,
+                                        message: 'Nome non può superare 50 caratteri'
+                                    }
+                                })}
                                 placeholder="Mario Rossi"
                                 className="input input-bordered glass text-white placeholder:text-white/50"
-                                required
                             />
+                            {errors.name && (
+                                <span className="text-error text-sm mt-1">{errors.name.message}</span>
+                            )}
                         </div>
 
                         <div className="form-control">
@@ -94,13 +89,19 @@ function Register() {
                             </label>
                             <input
                                 type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
+                                {...register('email', {
+                                    required: 'Email è obbligatoria',
+                                    maxLength: {
+                                        value: 50,
+                                        message: 'Email non può superare 50 caratteri'
+                                    }
+                                })}
                                 placeholder="tua@email.com"
                                 className="input input-bordered glass text-white placeholder:text-white/50"
-                                required
                             />
+                            {errors.email && (
+                                <span className="text-error text-sm mt-1">{errors.email.message}</span>
+                            )}
                         </div>
 
                         <div className="form-control">
@@ -109,13 +110,19 @@ function Register() {
                             </label>
                             <input
                                 type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
+                                {...register('password', {
+                                    required: 'Password è obbligatoria',
+                                    maxLength: {
+                                        value: 50,
+                                        message: 'Password non può superare 50 caratteri'
+                                    }
+                                })}
                                 placeholder="••••••••"
                                 className="input input-bordered glass text-white placeholder:text-white/50"
-                                required
                             />
+                            {errors.password && (
+                                <span className="text-error text-sm mt-1">{errors.password.message}</span>
+                            )}
                         </div>
 
                         <div className="form-control">
@@ -124,13 +131,20 @@ function Register() {
                             </label>
                             <input
                                 type="password"
-                                name="confirmPassword"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
+                                {...register('confirmPassword', {
+                                    required: 'Conferma password è obbligatoria',
+                                    maxLength: {
+                                        value: 50,
+                                        message: 'Conferma password non può superare 50 caratteri'
+                                    },
+                                    validate: value => value === password || 'Le password non coincidono'
+                                })}
                                 placeholder="••••••••"
                                 className="input input-bordered glass text-white placeholder:text-white/50"
-                                required
                             />
+                            {errors.confirmPassword && (
+                                <span className="text-error text-sm mt-1">{errors.confirmPassword.message}</span>
+                            )}
                         </div>
 
                         <button type="submit" className="btn btn-primary w-full mt-4">

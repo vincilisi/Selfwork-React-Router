@@ -1,31 +1,24 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useForm } from 'react-hook-form'
 
 function Login() {
-    const [formData, setFormData] = useState({
-        email: '',
-        password: ''
-    })
     const [error, setError] = useState('')
     const { login } = useAuth()
     const navigate = useNavigate()
 
-    const handleChange = (e) => {
-        const { name, value } = e.target
-        setFormData(prev => ({
-            ...prev,
-            [name]: value
-        }))
-        setError('')
-    }
+    const {
+        register,
+        handleSubmit,
+        formState: { errors }
+    } = useForm()
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const onSubmit = (data) => {
         setError('')
 
         try {
-            login(formData.email, formData.password)
+            login(data.email, data.password)
             navigate('/')
         } catch (err) {
             setError(err.message)
@@ -45,20 +38,26 @@ function Login() {
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text text-white font-medium">Email</span>
                             </label>
                             <input
                                 type="email"
-                                name="email"
-                                value={formData.email}
-                                onChange={handleChange}
+                                {...register('email', {
+                                    required: 'Email è obbligatoria',
+                                    maxLength: {
+                                        value: 50,
+                                        message: 'Email non può superare 50 caratteri'
+                                    }
+                                })}
                                 placeholder="tua@email.com"
                                 className="input input-bordered glass text-white placeholder:text-white/50"
-                                required
                             />
+                            {errors.email && (
+                                <span className="text-error text-sm mt-1">{errors.email.message}</span>
+                            )}
                         </div>
 
                         <div className="form-control">
@@ -67,13 +66,19 @@ function Login() {
                             </label>
                             <input
                                 type="password"
-                                name="password"
-                                value={formData.password}
-                                onChange={handleChange}
+                                {...register('password', {
+                                    required: 'Password è obbligatoria',
+                                    maxLength: {
+                                        value: 50,
+                                        message: 'Password non può superare 50 caratteri'
+                                    }
+                                })}
                                 placeholder="••••••••"
                                 className="input input-bordered glass text-white placeholder:text-white/50"
-                                required
                             />
+                            {errors.password && (
+                                <span className="text-error text-sm mt-1">{errors.password.message}</span>
+                            )}
                         </div>
 
                         <button type="submit" className="btn btn-primary w-full mt-4">
