@@ -2,28 +2,27 @@ import { createContext, useContext, useState } from 'react'
 
 const AuthContext = createContext()
 
+
 export const useAuth = () => {
     const context = useContext(AuthContext)
     if (!context) {
-        throw new Error('useAuth deve essere usato all\'interno di un AuthProvider')
+        throw new Error('useAuth deve essere usato dentro AuthProvider')
     }
     return context
 }
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
-    const [users, setUsers] = useState([]) // Simula un database di utenti registrati
+    const [users, setUsers] = useState([])
 
-    // Funzione per registrare un nuovo utente
     const register = (userData) => {
-        // Controlla se l'email è già registrata
-        const existingUser = users.find(u => u.email === userData.email)
-        if (existingUser) {
+
+        const esistente = users.find(u => u.email === userData.email)
+        if (esistente) {
             throw new Error('Email già registrata')
         }
 
-        // Crea il nuovo utente
-        const newUser = {
+        const nuovoUtente = {
             id: Date.now(),
             name: userData.name,
             email: userData.email,
@@ -31,43 +30,38 @@ export const AuthProvider = ({ children }) => {
             registeredAt: new Date().toISOString()
         }
 
-        // Aggiungi l'utente al "database"
-        setUsers(prev => [...prev, newUser])
+        setUsers(prev => [...prev, nuovoUtente])
 
-        // Effettua il login automatico dopo la registrazione
+
         setUser({
-            id: newUser.id,
-            name: newUser.name,
-            email: newUser.email
+            id: nuovoUtente.id,
+            name: nuovoUtente.name,
+            email: nuovoUtente.email
         })
 
-        return newUser
+        return nuovoUtente
     }
 
-    // Funzione per effettuare il login
     const login = (email, password) => {
-        const foundUser = users.find(u => u.email === email && u.password === password)
+        const utenteDB = users.find(u => u.email === email && u.password === password)
 
-        if (!foundUser) {
+        if (!utenteDB) {
             throw new Error('Credenziali non valide')
         }
 
-        // Salva l'utente loggato (senza la password)
         setUser({
-            id: foundUser.id,
-            name: foundUser.name,
-            email: foundUser.email
+            id: utenteDB.id,
+            name: utenteDB.name,
+            email: utenteDB.email
         })
 
-        return foundUser
+        return utenteDB
     }
 
-    // Funzione per effettuare il logout
     const logout = () => {
         setUser(null)
     }
 
-    // Verifica se l'utente è autenticato
     const isAuthenticated = () => {
         return user !== null
     }
